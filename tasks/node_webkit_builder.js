@@ -51,7 +51,7 @@ module.exports = function(grunt) {
         'type': 'win',
         'files': ['ffmpegsumo.dll', 'icudt.dll', 'libEGL.dll', 'libGLESv2.dll', 'nw.exe', 'nw.pak'],
         'nwpath': 'nw.exe',
-        'app': '%APPNAME%.exe',
+        'app': 'package.nw',
         'exclude': ['nwsnapshot.exe']
       }, {
         'url': "v%VERSION%/node-webkit-v%VERSION%-osx-ia32.zip",
@@ -105,7 +105,7 @@ module.exports = function(grunt) {
 
       // We are building for one of these platforms
       // that requires a zip
-      _.any(_.pick(options, "win", "linux32", "linux64"))
+      _.any(_.pick(options, "linux32", "linux64"))//"win",
     );
 
     // Generate the release path
@@ -231,12 +231,14 @@ module.exports = function(grunt) {
             // Omit the nw executable on other platforms
             if(filename !== 'nw.exe' && filename !== 'nw') {
               grunt.file.copy(abspath, path.join(releaseFolder, filename));
+            } else if (filename === 'nw.exe') {
+              grunt.file.copy(abspath, path.join(releaseFolder, options.app_name+'.exe'));
             }
           }
         });
 
         // Let's create the release
-        if(plattform.type === 'mac' && options.zip === false) {
+        if((plattform.type === 'mac' || plattform.type === 'win') && options.zip === false) {
           // Don't zip for OS X if specified
           // Allows faster app booting
           generateDone.push(
