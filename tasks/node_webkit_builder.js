@@ -12,6 +12,17 @@ var Q = require('q'),
   fs = require('fs'),
   async = require('async'),
   _ = require('lodash');
+  
+function getWindowsFilenames(version) {
+    var result;
+    console.log("version", version);
+    if (version === "0.10.5" || version === "0.11.0") {
+        result = ['ffmpegsumo.dll', 'icudtl.dat', 'libEGL.dll', 'libGLESv2.dll', 'nw.exe', 'nw.pak', 'locales'];
+    } else {
+        result = ['ffmpegsumo.dll', 'icudt.dll', 'libEGL.dll', 'libGLESv2.dll', 'nw.exe', 'nw.pak'];
+    }
+    return result;
+}
 
 module.exports = function(grunt) {
   // ***************************************************************************
@@ -49,7 +60,7 @@ module.exports = function(grunt) {
       webkitFiles = [{
         'url': "v%VERSION%/node-webkit-v%VERSION%-win-ia32.zip",
         'type': 'win',
-        'files': ['ffmpegsumo.dll', 'icudt.dll', 'libEGL.dll', 'libGLESv2.dll', 'nw.exe', 'nw.pak'],
+        'files': getWindowsFilenames(options.version),
         'nwpath': 'nw.exe',
         'app': 'package.nw',
         'exclude': ['nwsnapshot.exe']
